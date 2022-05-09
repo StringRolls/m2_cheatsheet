@@ -93,4 +93,56 @@ project
 <hr>
 
 ## **Routing**
-We are going to establish our application's route through the various express methods that we know
+We are going to establish our application's route through the various express methods that we know. Please notice that they are named after the http action verbs they respond to.
+
+Basic syntax for EVERY route that you will code goes as follows:
+```` js
+// GET route
+app.get('/', middleware, (req, res) => {
+    // Here you specify what happens when you recieve a GET request for this route
+});
+
+// POST route
+app.post('/', middleware, (req, res) => {
+    // Here you specify what happens when a user sends a POST request to this route
+});
+
+// Sister route
+app
+.route('/')
+.get( middleware, (req, res) => {
+    // code
+})
+.post( middleware, (req, res) => {
+    // code
+})
+````
+
+Notice that the above code is ALWAYS required when you write a route, what will change is **the code inside the callback** depending on what you want to happen.
+<br/>
+<br/>
+
+### **Regarding routes and rendering:**
+We need to make something very clear that needs to be ingrained in our brains.
+````js
+app.get('/', (req, res) => {
+    User.find()
+    .then(dbUsers => res.render('userViews/user-list', { users: dbUsers }))
+    .catch(err => console.log(err))
+})
+````
+Using the above code as an example, we need to understand that:
+- The string we find before the callback is **the name of our route**.
+- On the other hand, the string that we find after the `res.render()` express method is **the name of our `.hbs` file**. It is the file that contains the html structure that we will serve in a certain route as a response to a GET request.
+
+We should never confuse the two of them, and you need to learn by heart which one is which and how to use them. In case we used `res.redirect()` and not `res.render()`, however, we would then specifiy the ROUTE, and not the hbs file. This is because render paints a file, but redirect makes a GET request to a route.
+
+<hr>
+
+## **ExpressJS vs Mongoose**
+As we had some trouble differentiating the two, here is the main difference:
+
+- **Express** is a library that helps us build a server for our application. It is related to the routing, the authentication and authorization or the rendering of views. It is the skeleton of the website.
+- **Mongoose**, on the contrary, is a library that exclusively helps us connect to MongoDB. In other words, it is the portal to our database. It is related to everything that has to do with the db, and ONLY what has to do with the db. We will only use mongoose when we want to interact with mongo: models, connection and to create, update or retrieve objects from our db. It is the tool that helps us feed dynamic content to our website.
+
+Hopefully this makes it clearer!
